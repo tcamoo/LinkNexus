@@ -6,9 +6,13 @@ export const uploadToTelegram = async (
   config: TelegramConfig,
   onProgress?: (progress: number) => void
 ): Promise<string> => {
+  const isAudio = file.type.startsWith('audio/');
+  const endpoint = isAudio ? 'sendAudio' : 'sendVideo';
+  const fileKey = isAudio ? 'audio' : 'video';
+
   const formData = new FormData();
   formData.append("chat_id", config.chatId);
-  formData.append("video", file);
+  formData.append(fileKey, file);
   formData.append("caption", caption);
   formData.append("parse_mode", "Markdown");
 
@@ -17,7 +21,7 @@ export const uploadToTelegram = async (
   
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    const url = `${apiRoot}/bot${config.botToken}/sendVideo`;
+    const url = `${apiRoot}/bot${config.botToken}/${endpoint}`;
 
     xhr.open("POST", url, true);
     // Disable timeout for large files
@@ -46,7 +50,6 @@ export const uploadToTelegram = async (
                link = `https://t.me/${chat.username}/${messageId}`;
              } else {
                // Private chat: https://t.me/c/CHAT_ID_WITHOUT_PREFIX/message_id
-               // Telegram IDs often start with -100 for supergroups, we need to strip that for the link
                const cleanId = chat.id.toString().replace(/^-100/, '');
                link = `https://t.me/c/${cleanId}/${messageId}`;
              }
