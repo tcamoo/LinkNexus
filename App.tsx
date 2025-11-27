@@ -47,13 +47,18 @@ const App: React.FC = () => {
     // Determine type
     const isVideo = file.type.startsWith('video/');
     const isAudio = file.type.startsWith('audio/');
+    const isImage = file.type.startsWith('image/');
     
-    // Create preview only if video
-    const previewUrl = isVideo ? URL.createObjectURL(file) : null;
+    // Create preview for video and images
+    const previewUrl = (isVideo || isImage) ? URL.createObjectURL(file) : null;
     
+    let fileType: 'video' | 'audio' | 'image' = 'video';
+    if (isAudio) fileType = 'audio';
+    if (isImage) fileType = 'image';
+
     setState({
       file,
-      fileType: isVideo ? 'video' : 'audio',
+      fileType,
       previewUrl,
       status: 'uploading',
       progress: 0
@@ -72,7 +77,7 @@ const App: React.FC = () => {
       // Save to History (KV)
       await saveHistory({
         filename: file.name,
-        fileType: isVideo ? 'video' : 'audio',
+        fileType,
         link,
         fileId,
         timestamp: Date.now(),
@@ -141,7 +146,7 @@ const App: React.FC = () => {
               LINK<span className="text-cyber-cyan">NEXUS</span>
             </h2>
             <p className="text-cyber-cyan/60 font-mono text-sm md:text-base tracking-widest uppercase">
-              // Secure Video & Audio Uplink Protocol
+              // Secure Video & Audio & Image Uplink
             </p>
         </div>
 
