@@ -51,7 +51,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
 
         <div className="flex items-center gap-2 mb-6 text-cyber-cyan border-b border-cyber-cyan/20 pb-4">
           <Settings className="w-6 h-6 animate-spin-slow" />
-          <h2 className="text-xl font-bold tracking-widest font-mono">SYSTEM CONFIG</h2>
+          <h2 className="text-xl font-bold tracking-widest font-mono">系统配置 (SYSTEM CONFIG)</h2>
         </div>
 
         <div className="space-y-5 font-mono">
@@ -61,43 +61,43 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
             <div className="flex items-center gap-2 font-bold mb-1">
                 {isServerMode ? <Cloud className="w-4 h-4 text-cyber-purple" /> : <Server className="w-4 h-4 text-cyber-cyan" />}
                 <span className={isServerMode ? 'text-cyber-purple' : 'text-cyber-cyan'}>
-                    {isServerMode ? 'CURRENT: SERVER MODE' : 'CURRENT: DIRECT MODE'}
+                    {isServerMode ? '当前: 服务器模式' : '当前: 直连模式'}
                 </span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
                 {isServerMode 
-                    ? "Using Cloudflare Backend Env Vars. Limit: 100MB. No frontend config required."
-                    : "Browser uploads directly to Telegram. Supports large files (up to 2GB with Local Server)."
+                    ? "使用 Cloudflare 后端环境变量。限制 100MB。无需前端配置，更加安全。"
+                    : "浏览器直接上传至 Telegram。支持大文件（配合本地服务器可达 2GB）。"
                 }
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-                <label className="block text-xs font-bold text-cyber-cyan/80 mb-1 uppercase">Telegram Bot Token</label>
+                <label className="block text-xs font-bold text-cyber-cyan/80 mb-1 uppercase">Telegram 机器人令牌 (Bot Token)</label>
                 <input
                 type="text"
                 value={botToken}
                 onChange={(e) => setBotToken(e.target.value)}
-                placeholder="Direct Mode Only"
+                placeholder="仅直连模式需要配置"
                 className="cyber-input w-full px-4 py-2 text-sm rounded-sm"
                 />
             </div>
 
             <div>
-                <label className="block text-xs font-bold text-cyber-cyan/80 mb-1 uppercase">Chat ID / Username</label>
+                <label className="block text-xs font-bold text-cyber-cyan/80 mb-1 uppercase">频道 ID / 用户名 (Chat ID)</label>
                 <input
                 type="text"
                 value={chatId}
                 onChange={(e) => setChatId(e.target.value)}
-                placeholder="Direct Mode Only"
+                placeholder="仅直连模式需要配置"
                 className="cyber-input w-full px-4 py-2 text-sm rounded-sm"
                 />
             </div>
 
             <div>
                 <label className="block text-xs font-bold text-cyber-cyan/80 mb-1 uppercase flex items-center gap-2">
-                API Gateway <span className="text-[10px] text-slate-500 lowercase font-normal">(optional for local server)</span>
+                API 网关地址 (API Gateway) <span className="text-[10px] text-slate-500 lowercase font-normal">(本地服务器可选)</span>
                 </label>
                 <input
                 type="text"
@@ -112,10 +112,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
             <div className="bg-cyber-dark/50 border border-yellow-500/30 p-3 rounded-sm text-xs space-y-2">
                 <div className="flex items-center gap-2 text-yellow-400 font-bold uppercase">
                     <Info className="w-4 h-4" />
-                    Env Var Required
+                    需配置环境变量
                 </div>
                 <p className="text-slate-400 leading-relaxed">
-                    For Direct Links to work, <strong>TG_BOT_TOKEN</strong> must be set in Cloudflare Dashboard, even if using Direct Mode here.
+                    为了使直链功能 (Direct Links) 正常工作，即使在此处使用直连模式，也必须在 Cloudflare 后台设置 <strong>TG_BOT_TOKEN</strong>。
                 </p>
             </div>
 
@@ -127,7 +127,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
                         className="flex-1 py-3 flex items-center justify-center gap-2 text-xs font-bold border border-cyber-purple/50 text-cyber-purple hover:bg-cyber-purple/10 transition-colors uppercase"
                     >
                         <RefreshCw className="w-3 h-3" />
-                        Reset to Server Mode
+                        重置为服务器模式
                     </button>
                 )}
                 <button
@@ -135,7 +135,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
                 className="flex-[2] cyber-button py-3 flex items-center justify-center gap-2"
                 >
                 <Save className="w-4 h-4" />
-                SAVE CONFIG
+                保存配置
                 </button>
             </div>
           </form>
