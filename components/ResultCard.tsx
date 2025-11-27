@@ -42,7 +42,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ state, onReset }) => {
                 <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
                 <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
             </div>
-            <div className="text-[10px] font-mono text-cyber-cyan/50 tracking-widest">TRANSMISSION COMPLETE</div>
+            <div className="text-[10px] font-mono text-cyber-cyan/50 tracking-widest">传输任务完成</div>
         </div>
 
         {/* Preview Area */}
@@ -85,7 +85,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ state, onReset }) => {
                 <div className="flex flex-col md:flex-row gap-4 items-end">
                     <div className="flex-1 w-full space-y-1">
                         <label className="text-xs font-mono text-cyber-cyan uppercase flex items-center gap-1">
-                            <Link className="w-3 h-3" /> Direct Proxy Link
+                            <Link className="w-3 h-3" /> 直连代理地址 (Direct Link)
                         </label>
                         <div className="flex bg-black/50 border border-cyber-cyan/30 p-1 rounded-sm shadow-[0_0_10px_rgba(0,243,255,0.1)]">
                             <input 
@@ -102,7 +102,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ state, onReset }) => {
                         className="cyber-button px-6 py-2 flex items-center justify-center gap-2 text-sm shrink-0"
                     >
                         {copiedDirect ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                        {copiedDirect ? 'COPIED' : 'COPY LINK'}
+                        {copiedDirect ? '已复制' : '复制链接'}
                     </button>
                 </div>
             )}
@@ -110,7 +110,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ state, onReset }) => {
             {/* Telegram Link Section */}
             <div className="flex flex-col md:flex-row gap-4 items-end opacity-70 hover:opacity-100 transition-opacity">
                 <div className="flex-1 w-full space-y-1">
-                    <label className="text-xs font-mono text-cyber-cyan/60 uppercase">Telegram Deep Link</label>
+                    <label className="text-xs font-mono text-cyber-cyan/60 uppercase">Telegram 原生链接</label>
                     <div className="flex bg-black/50 border border-cyber-cyan/10 p-1 rounded-sm">
                         <input 
                             type="text" 
@@ -125,7 +125,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ state, onReset }) => {
                     <button
                         onClick={() => handleCopy(state.telegramLink!, false)}
                         className="p-2 border border-cyber-cyan/30 text-cyber-cyan/70 hover:bg-cyber-cyan/10 hover:text-cyber-cyan rounded-sm transition-all"
-                        title="Copy TG Link"
+                        title="复制原生链接"
                     >
                         {copiedTg ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                     </button>
@@ -134,7 +134,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ state, onReset }) => {
                         target="_blank"
                         rel="noreferrer"
                         className="p-2 border border-cyber-cyan/30 text-cyber-cyan/70 hover:bg-cyber-cyan/10 hover:text-cyber-cyan rounded-sm transition-all"
-                        title="Open External"
+                        title="打开原生链接"
                     >
                         <ExternalLink className="w-4 h-4" />
                     </a>
@@ -148,7 +148,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ state, onReset }) => {
                     className="w-full flex items-center justify-center gap-2 py-3 bg-cyber-gray/30 hover:bg-cyber-cyan/20 border border-cyber-gray hover:border-cyber-cyan text-slate-300 hover:text-cyber-cyan transition-all duration-300 font-mono uppercase tracking-widest text-sm rounded-sm group"
                 >
                     <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
-                    Start New Transmission
+                    开始新的传输任务
                 </button>
             </div>
         </div>
