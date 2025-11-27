@@ -1,16 +1,18 @@
 import React, { useCallback, useState } from 'react';
-import { Upload, AlertCircle, Cpu, Music, Video, Zap, Image as ImageIcon } from 'lucide-react';
+import { Upload, AlertCircle, Cpu, Music, Video, Zap, Image as ImageIcon, Cloud, Server } from 'lucide-react';
 import { UploadState } from '../types';
 
 interface UploadZoneProps {
   onUploadStart: (file: File) => void;
   uploadState: UploadState;
+  isServerMode: boolean;
 }
 
 const MAX_SIZE_MB = 2000;
+const SERVER_MODE_LIMIT_MB = 100;
 const OFFICIAL_API_LIMIT_MB = 50;
 
-const UploadZone: React.FC<UploadZoneProps> = ({ onUploadStart, uploadState }) => {
+const UploadZone: React.FC<UploadZoneProps> = ({ onUploadStart, uploadState, isServerMode }) => {
   const [dragActive, setDragActive] = useState(false);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -34,12 +36,20 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onUploadStart, uploadState }) =
     }
 
     const fileSizeMB = file.size / (1024 * 1024);
+    
+    // Absolute max limit
     if (fileSizeMB > MAX_SIZE_MB) {
       alert(`CAPACITY EXCEEDED // 文件过大 (Max ${MAX_SIZE_MB}MB)`);
       return;
     }
+
+    // Check Server Mode Limit (Cloudflare Worker limitation)
+    if (isServerMode && fileSizeMB > SERVER_MODE_LIMIT_MB) {
+        alert(`SERVER MODE LIMIT // 服务器代理模式仅支持 100MB 以下文件。\n\n当前文件: ${Math.round(fileSizeMB)}MB\n\n请点击右上角设置，配置 Bot Token 和 Chat ID 开启“直连模式”以支持大文件。`);
+        return;
+    }
     
-    // Local server check
+    // Local server check for Direct Mode
     let isLocalServer = false;
     try {
         const configStr = localStorage.getItem('vidgraph_tg_config');
@@ -53,13 +63,14 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onUploadStart, uploadState }) =
        console.error(e);
     }
 
-    if (fileSizeMB > OFFICIAL_API_LIMIT_MB && !isLocalServer) {
-        const proceed = window.confirm(`WARNING // 文件 (${Math.round(fileSizeMB)}MB) 超过官方 50MB 限制。\n\n需要配置本地 Bot Server。\n\n是否强制继续？`);
+    // Warn about Official API limit in Direct Mode
+    if (!isServerMode && fileSizeMB > OFFICIAL_API_LIMIT_MB && !isLocalServer) {
+        const proceed = window.confirm(`WARNING // 文件 (${Math.round(fileSizeMB)}MB) 超过官方 50MB 限制。\n\n需要配置本地 Bot Server，否则上传可能失败。\n\n是否强制继续？`);
         if (!proceed) return;
     }
 
     onUploadStart(file);
-  }, [onUploadStart]);
+  }, [onUploadStart, isServerMode]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -158,9 +169,13 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onUploadStart, uploadState }) =
         <span className="flex items-center gap-1"><ImageIcon className="w-3 h-3" /> Image</span>
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-cyber-cyan/40 bg-cyber-black/40 px-3 py-1 border border-cyber-cyan/10">
-        <Zap className="w-3 h-3" />
-        <span>LOCAL SERVER: UP TO 2GB</span>
+      <div className={`flex items-center gap-2 text-xs px-3 py-1 border rounded-full font-bold tracking-wide transition-colors ${
+          isServerMode 
+            ? 'border-cyber-purple/30 text-cyber-purple bg-cyber-purple/10' 
+            : 'border-cyber-cyan/30 text-cyber-cyan bg-cyber-cyan/10'
+      }`}>
+        {isServerMode ? <Cloud className="w-3 h-3" /> : <Server className="w-3 h-3" />}
+        <span>{isServerMode ? 'SERVER MODE (MAX 100MB)' : 'DIRECT MODE (UNLIMITED)'}</span>
       </div>
 
       {uploadState.error && (
