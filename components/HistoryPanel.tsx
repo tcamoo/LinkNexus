@@ -50,7 +50,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ isOpen, onClose, refreshTri
         <div className="p-4 border-b border-cyber-cyan/20 flex items-center justify-between bg-cyber-dark/80">
           <div className="flex items-center gap-2 text-cyber-cyan">
             <Clock className="w-5 h-5" />
-            <h2 className="font-bold tracking-wider font-mono">TRANSMISSION LOG</h2>
+            <h2 className="font-bold tracking-wider font-mono">历史传输记录 (LOG)</h2>
           </div>
           <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors">
             <X className="w-5 h-5" />
@@ -59,9 +59,9 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ isOpen, onClose, refreshTri
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {loading ? (
-            <div className="text-center py-10 text-cyber-cyan/50 font-mono animate-pulse">LOADING DATA...</div>
+            <div className="text-center py-10 text-cyber-cyan/50 font-mono animate-pulse">数据加载中...</div>
           ) : history.length === 0 ? (
-            <div className="text-center py-10 text-slate-600 font-mono">NO RECORDS FOUND</div>
+            <div className="text-center py-10 text-slate-600 font-mono">暂无记录</div>
           ) : (
             history.map((item) => {
               const directLink = getDirectLink(item.fileId);
@@ -99,11 +99,11 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ isOpen, onClose, refreshTri
                     <button 
                         onClick={() => handleCopy(targetLink, item.id)}
                         className="p-1.5 text-slate-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 rounded-sm transition-colors"
-                        title="Copy Link"
+                        title="复制链接"
                     >
                         {copiedId === item.id ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                     </button>
-                    <a href={item.link} target="_blank" rel="noreferrer" className="p-1.5 text-slate-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 rounded-sm" title="Open TG Link">
+                    <a href={item.link} target="_blank" rel="noreferrer" className="p-1.5 text-slate-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 rounded-sm" title="打开原生链接">
                         <ExternalLink className="w-4 h-4" />
                     </a>
                   </div>
@@ -114,7 +114,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ isOpen, onClose, refreshTri
         </div>
         
         <div className="p-3 text-center text-[10px] text-slate-600 border-t border-cyber-cyan/10 font-mono">
-            SYNCED WITH CLOUDFLARE KV
+            数据已同步至 CLOUDFLARE KV
         </div>
       </div>
     </div>
