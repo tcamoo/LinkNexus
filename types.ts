@@ -12,6 +12,7 @@ export interface UploadState {
   progress: number;
   error?: string;
   telegramLink?: string;
+  fileId?: string;
 }
 
 export interface HistoryItem {
@@ -19,6 +20,14 @@ export interface HistoryItem {
   filename: string;
   fileType: 'video' | 'audio';
   link: string;
+  fileId?: string;
   timestamp: number;
   size: number;
+}
+
+export interface VideoMetadata {
+  title: string;
+  description: string;
+  tags: string[];
+  suggestedFilename: string;
 }
