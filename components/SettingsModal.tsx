@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, X, ExternalLink, Server, AlertTriangle } from 'lucide-react';
+import { Settings, Save, X, ExternalLink, Server, AlertTriangle, Info } from 'lucide-react';
 import { TelegramConfig } from '../types';
 
 interface SettingsModalProps {
@@ -32,7 +32,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="cyber-box w-full max-w-md p-6 relative rounded-sm">
+      <div className="cyber-box w-full max-w-md p-6 relative rounded-sm max-h-[90vh] overflow-y-auto">
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 text-slate-500 hover:text-cyber-cyan transition-colors"
@@ -81,6 +81,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
               placeholder="https://api.telegram.org"
               className="cyber-input w-full px-4 py-2 text-sm rounded-sm"
             />
+          </div>
+
+          {/* Critical Notice for Direct Links */}
+          <div className="bg-cyber-dark/50 border border-yellow-500/30 p-3 rounded-sm text-xs space-y-2">
+            <div className="flex items-center gap-2 text-yellow-400 font-bold uppercase">
+                <Info className="w-4 h-4" />
+                Important: Direct Links
+            </div>
+            <p className="text-slate-400 leading-relaxed">
+                To enable <strong>Direct Stream Links</strong> (video/audio playback), you MUST also add your Bot Token to Cloudflare Dashboard.
+            </p>
+            <div className="bg-black/40 p-2 rounded text-cyber-cyan/70 font-mono text-[10px]">
+                Settings &gt; Environment Variables &gt; Add <strong>TG_BOT_TOKEN</strong>
+            </div>
           </div>
 
           <div className="pt-4 border-t border-cyber-cyan/20">
