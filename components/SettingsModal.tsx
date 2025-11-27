@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, X, ExternalLink, Server, AlertTriangle, Info } from 'lucide-react';
+import { Settings, Save, X, Server, AlertTriangle, Info, Cloud } from 'lucide-react';
 import { TelegramConfig } from '../types';
 
 interface SettingsModalProps {
@@ -16,8 +16,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
 
   useEffect(() => {
     if (config) {
-      setBotToken(config.botToken);
-      setChatId(config.chatId);
+      setBotToken(config.botToken || '');
+      setChatId(config.chatId || '');
       setApiRoot(config.apiRoot || 'https://api.telegram.org');
     }
   }, [config, isOpen]);
@@ -29,6 +29,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
     onSave({ botToken, chatId, apiRoot });
     onClose();
   };
+
+  const isServerMode = !botToken || !chatId;
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
@@ -46,15 +48,31 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5 font-mono">
+          
+          {/* Mode Indicator */}
+          <div className={`p-3 rounded-sm border ${isServerMode ? 'bg-cyber-purple/10 border-cyber-purple/50' : 'bg-cyber-cyan/10 border-cyber-cyan/50'} transition-colors`}>
+            <div className="flex items-center gap-2 font-bold mb-1">
+                {isServerMode ? <Cloud className="w-4 h-4 text-cyber-purple" /> : <Server className="w-4 h-4 text-cyber-cyan" />}
+                <span className={isServerMode ? 'text-cyber-purple' : 'text-cyber-cyan'}>
+                    {isServerMode ? 'SERVER MODE (BACKEND)' : 'DIRECT MODE (BROWSER)'}
+                </span>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+                {isServerMode 
+                    ? "Uploads proxy via Cloudflare Backend. No local config needed. Max 100MB."
+                    : "Uploads directly from browser to Telegram. Supports large files (up to 2GB) with Local Server."
+                }
+            </p>
+          </div>
+
           <div>
             <label className="block text-xs font-bold text-cyber-cyan/80 mb-1 uppercase">Telegram Bot Token</label>
             <input
               type="text"
               value={botToken}
               onChange={(e) => setBotToken(e.target.value)}
-              placeholder="123456:ABC-DEF..."
+              placeholder="Leave empty to use Server Env"
               className="cyber-input w-full px-4 py-2 text-sm rounded-sm"
-              required
             />
           </div>
 
@@ -64,9 +82,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
               type="text"
               value={chatId}
               onChange={(e) => setChatId(e.target.value)}
-              placeholder="@channel or -100..."
+              placeholder="Leave empty to use Server Env"
               className="cyber-input w-full px-4 py-2 text-sm rounded-sm"
-              required
             />
           </div>
 
@@ -87,14 +104,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, config, 
           <div className="bg-cyber-dark/50 border border-yellow-500/30 p-3 rounded-sm text-xs space-y-2">
             <div className="flex items-center gap-2 text-yellow-400 font-bold uppercase">
                 <Info className="w-4 h-4" />
-                Important: Direct Links
+                Direct Link Requirement
             </div>
             <p className="text-slate-400 leading-relaxed">
-                To enable <strong>Direct Stream Links</strong> (video/audio playback), you MUST also add your Bot Token to Cloudflare Dashboard.
+                For Direct Links (/api/file) to work, <strong>TG_BOT_TOKEN</strong> must be set in Cloudflare Environment Variables, regardless of the mode used here.
             </p>
-            <div className="bg-black/40 p-2 rounded text-cyber-cyan/70 font-mono text-[10px]">
-                Settings &gt; Environment Variables &gt; Add <strong>TG_BOT_TOKEN</strong>
-            </div>
           </div>
 
           <div className="pt-4 border-t border-cyber-cyan/20">
