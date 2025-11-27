@@ -1,0 +1,11 @@
+{
+  "name": "vidgraph-ai",
+  "compatibility_date": "2024-09-23",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
