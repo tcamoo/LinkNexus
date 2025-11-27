@@ -1,16 +1,19 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { VideoMetadata } from "../types";
 
-// Initialize Gemini Client
-// Note: In a production environment, never expose keys on the client.
-// This is structured for the specific provided runtime environment.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export const analyzeVideoContent = async (
   base64Data: string, 
   mimeType: string
 ): Promise<VideoMetadata> => {
   try {
+    // Initialize Gemini Client lazily
+    // This prevents the app from crashing on load if the API key is missing
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      throw new Error("API Key 未配置。请在部署设置中添加 API_KEY 环境变量。");
+    }
+    
+    const ai = new GoogleGenAI({ apiKey });
     const modelId = "gemini-2.5-flash"; // Efficient for video analysis
 
     const response = await ai.models.generateContent({
