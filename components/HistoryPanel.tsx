@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Clock, FileVideo, FileAudio, ExternalLink, Copy, Check, Link } from 'lucide-react';
+import { X, Clock, FileVideo, FileAudio, ExternalLink, Copy, Check, Link, Image as ImageIcon } from 'lucide-react';
 import { HistoryItem } from '../types';
 import { fetchHistory } from '../services/historyService';
 
@@ -73,6 +73,8 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ isOpen, onClose, refreshTri
                     <div className="flex items-center gap-2 overflow-hidden">
                       {item.fileType === 'video' ? (
                         <FileVideo className="w-4 h-4 text-cyber-cyan shrink-0" />
+                      ) : item.fileType === 'image' ? (
+                        <ImageIcon className="w-4 h-4 text-yellow-400 shrink-0" />
                       ) : (
                         <FileAudio className="w-4 h-4 text-cyber-purple shrink-0" />
                       )}
