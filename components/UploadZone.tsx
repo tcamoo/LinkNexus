@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Upload, AlertCircle, Cpu, Music, Video, Zap } from 'lucide-react';
+import { Upload, AlertCircle, Cpu, Music, Video, Zap, Image as ImageIcon } from 'lucide-react';
 import { UploadState } from '../types';
 
 interface UploadZoneProps {
@@ -26,9 +26,10 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onUploadStart, uploadState }) =
   const validateAndUpload = useCallback((file: File) => {
     const isVideo = file.type.startsWith('video/');
     const isAudio = file.type.startsWith('audio/');
+    const isImage = file.type.startsWith('image/');
 
-    if (!isVideo && !isAudio) {
-      alert("UNSUPPORTED FILE TYPE // 仅支持视频或音频文件");
+    if (!isVideo && !isAudio && !isImage) {
+      alert("UNSUPPORTED FILE TYPE // 仅支持视频、音频或图片文件");
       return;
     }
 
@@ -137,7 +138,7 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onUploadStart, uploadState }) =
         type="file"
         id="file-upload"
         className="hidden"
-        accept="video/*,audio/*"
+        accept="video/*,audio/*,image/*"
         onChange={handleChange}
       />
       
@@ -149,10 +150,12 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onUploadStart, uploadState }) =
         INITIATE UPLOAD
       </h3>
       
-      <div className="flex items-center gap-4 text-cyber-cyan/60 text-sm mb-6 font-mono">
-        <span className="flex items-center gap-1"><Video className="w-3 h-3" /> MP4/WebM</span>
+      <div className="flex flex-wrap justify-center items-center gap-4 text-cyber-cyan/60 text-sm mb-6 font-mono">
+        <span className="flex items-center gap-1"><Video className="w-3 h-3" /> Video</span>
         <span className="text-cyber-cyan/20">|</span>
-        <span className="flex items-center gap-1"><Music className="w-3 h-3" /> MP3/FLAC/WAV</span>
+        <span className="flex items-center gap-1"><Music className="w-3 h-3" /> Audio</span>
+        <span className="text-cyber-cyan/20">|</span>
+        <span className="flex items-center gap-1"><ImageIcon className="w-3 h-3" /> Image</span>
       </div>
 
       <div className="flex items-center gap-2 text-xs text-cyber-cyan/40 bg-cyber-black/40 px-3 py-1 border border-cyber-cyan/10">
