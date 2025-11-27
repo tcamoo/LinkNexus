@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { UploadCloud, FileVideo, AlertCircle, Loader2, Info } from 'lucide-react';
+import { UploadCloud, AlertCircle, Loader2, Info } from 'lucide-react';
 import { UploadState } from '../types';
 
 interface UploadZoneProps {
@@ -37,8 +37,21 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onUploadStart, uploadState }) =
       return;
     }
     
-    // Warning for official API users
-    const isLocalServer = localStorage.getItem('vidgraph_tg_config')?.includes('http');
+    // Check if using local server
+    let isLocalServer = false;
+    try {
+        const configStr = localStorage.getItem('vidgraph_tg_config');
+        if (configStr) {
+            const config = JSON.parse(configStr);
+            // It is considered a local server if apiRoot is set and DOES NOT contain telegram.org
+            if (config.apiRoot && !config.apiRoot.includes('telegram.org')) {
+                isLocalServer = true;
+            }
+        }
+    } catch (e) {
+        console.error("Error parsing config", e);
+    }
+
     if (fileSizeMB > OFFICIAL_API_LIMIT_MB && !isLocalServer) {
         const proceed = window.confirm(`警告：该文件 (${Math.round(fileSizeMB)}MB) 超过了 Telegram 官方 API 的 50MB 限制。\n\n如果您没有配置本地 Bot 服务器，上传将会失败。\n\n是否继续？`);
         if (!proceed) return;
