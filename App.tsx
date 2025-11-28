@@ -153,6 +153,7 @@ const App: React.FC = () => {
           <ResultCard state={state} onReset={handleReset} />
         ) : (
           <UploadZone 
+            key={state.status} // Force re-render to clear internal state like drag active
             onUploadStart={handleUploadStart} 
             uploadState={state} 
             isServerMode={isServerMode} 
